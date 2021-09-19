@@ -8,15 +8,15 @@ module.exports = {
         primaryKey: true,
       },
       username: {
-        type: DataTypes.STRING(200),
+        type: Sequelize.STRING(200),
         allowNull: false,
       },
       passwordHash: {
-        type: DataTypes.STRING(1000),
+        type: Sequelize.STRING(1000),
         allowNull: false,
       },
       passwordSalt: {
-        type: DataTypes.STRING(1000),
+        type: Sequelize.STRING(1000),
         allowNull: false,
       },
       deleted: {
