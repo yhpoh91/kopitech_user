@@ -1,5 +1,6 @@
 const { L } = require('../../services/logger')('User Router');
 const userService = require('../../services/user');
+const hashService = require('../../services/hash');
 
 const listUsers = async (req, res, next) => {
   try {
