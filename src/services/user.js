@@ -45,7 +45,7 @@ const listUsers = async (criteria, limit = 30, offset = 0, excludeDeleted = true
     }
 
     const rawUsers = await User.findAll(query);
-    const mappedUsers = (rawUsers || []).map(rawuser => mapUser(rawUser, removeSensitive));
+    const mappedUsers = (rawUsers || []).map(rawUser => mapUser(rawUser, removeSensitive));
     return Promise.resolve(mappedUsers);
   } catch (error) {
     return Promise.reject(error);

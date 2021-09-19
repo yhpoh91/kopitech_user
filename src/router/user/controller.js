@@ -46,6 +46,7 @@ const getUser = async (req, res, next) => {
 const updateUsername = async (req, res, next) => {
   try {
     const { userId } = req.params;
+    const { username } = req.body;
     await userService.updateUsername(userId, { username }, true);
     res.status(200).send();
   } catch (error) {
