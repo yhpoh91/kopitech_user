@@ -99,7 +99,7 @@ const updatePassword = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { password } = req.body;
-    await userService.updateUsername(userId, { password }, true);
+    await userService.updatePassword(userId, { password }, true);
     res.status(200).send();
   } catch (error) {
     next(error);
