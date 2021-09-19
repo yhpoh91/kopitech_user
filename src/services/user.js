@@ -96,7 +96,7 @@ const updateUsername = async (userId, requestedChanges, excludeDeleted = true) =
   try {
     const query = {
       where: {
-        id: profileId,
+        id: userId,
       },
       fields: [],
       returning: true,
@@ -124,7 +124,7 @@ const updatePassword = async (userId, requestedChanges, excludeDeleted = true) =
   try {
     const query = {
       where: {
-        id: profileId,
+        id: userId,
       },
       fields: [],
       returning: true,
