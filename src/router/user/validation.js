@@ -23,6 +23,14 @@ module.exports = {
       }).default({}).optional(),
     },
   },
+  authenticateUser: {
+    query: {},
+    params: {},
+    body: {
+      username: joi.string().required(),
+      password: joi.string().required(),
+    },
+  },
   createUser: {
     query: {},
     params: {},

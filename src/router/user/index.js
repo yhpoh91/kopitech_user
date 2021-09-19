@@ -21,6 +21,12 @@ router.route('/search')
     controller.searchUsers,
   );
 
+router.route('/authenticate')
+  .post(
+    validate(validator.authenticateUser),
+    controller.authenticateUser,
+  );
+
 router.route('/:userId/username')
   .put(
     validate(validator.updateUsername),

@@ -22,6 +22,46 @@ const searchUsers = async (req, res, next) => {
   }
 };
 
+const authenticateUser = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const criteria = { username };
+    const users = await userService.listUsers(criteria, 30, 0, true, false);
+
+    if (users == null) {
+      L.error(`Null user list when login`);
+      res.json({ authenticated: false });
+      return;
+    }
+
+    if (users.length <= 0) {
+      L.warn(`Empty user list when login`);
+      res.json({ authenticated: false });
+      return;
+    }
+
+    if (users.length > 1) {
+      L.warn(`More than one active user with username "${username}!"`);
+    }
+
+    const user = users[0];
+    const { id: userId, passwordHash: correctHash, passwordSalt } = user;
+
+    // Try Hashing
+    const testhash = await hashService.hash(password, passwordSalt);
+    if (testhash !== correctHash) {
+      L.info(`Password hash mismatched, login failed for username "${username}" [${userId}]`);
+      res.json({ authenticated: false });
+      return;
+    }
+
+    const safeUser = await userService.getUser(userId, true, true);
+    res.json({ authenticated: true, user: safeUser });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
