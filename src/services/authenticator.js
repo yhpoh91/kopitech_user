@@ -4,32 +4,14 @@ const { L } = require('./logger')('Authenticator');
 
 
 const authenticationEnabled = (process.env.AUTHENTICATION_ENABLED || 'true').toLowerCase() === 'true';
-const authenticatorLoginServiceUrl = process.env.AUTHENTICATOR_SERVICE_LOGIN_SERVICE_URL;
 const authenticatorVerifyUrl = process.env.AUTHENTICATOR_SERVICE_VERIFY_URL;
-
-const getServiceToken = async () => Promise.resolve(`temp-token`);
-
-const getConfig = async () => {
-  try {
-    const token = await getServiceToken();
-    const config = {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
-    };
-    return Promise.resolve(config);
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
 
 const validateToken = async (accessToken) => {
   try {
     const url = authenticatorVerifyUrl;
     const body = { accessToken };
-    const config = await getConfig();
 
-    const response = await axios.post(url, body, config);
+    const response = await axios.post(url, body);
     const { data } = response;
     return Promise.resolve(data);
   } catch (error) {
@@ -43,6 +25,7 @@ const authenticate = async (req, res, next) => {
 
     // Ensure authorization header is present
     if (authenticationEnabled) {
+      L.debug('Checking auth header');
       const authorizationHeader = req.headers['authorization'];
       if (authorizationHeader == null) {
         res.status(401).send('invalid authorization header');
@@ -62,6 +45,7 @@ const authenticate = async (req, res, next) => {
     // Validate Token
     let hasAccess = !authenticationEnabled;
     if (!hasAccess) {
+      L.debug('Validating Token');
       const { ok: isValidated, payload } = await validateToken(token);
       if (isValidated && payload) {
         const { sub, typ } = payload;
@@ -78,6 +62,7 @@ const authenticate = async (req, res, next) => {
       return;
     }
 
+    L.debug('Token is Valid');
     next();
   } catch (error) {
     L.error(error.message); 
